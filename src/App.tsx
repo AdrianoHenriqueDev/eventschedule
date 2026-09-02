@@ -62,21 +62,8 @@ function App() {
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [theme, setTheme] = useState<'default'|'diablo'|'overwatch'|'warcraft'>('default');
   const [showMapModal, setShowMapModal] = useState<string | null>(null);
-  const [showMurloc, setShowMurloc] = useState(false);
   
   const scheduleContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (searchQuery.toLowerCase() === 'murloc') {
-      setShowMurloc(true);
-      setSearchQuery('');
-      try {
-        const audio = new Audio('https://wow.zamimg.com/wowsounds/554904');
-        audio.play().catch(e => console.log('Audio blocked', e));
-      } catch (e) {}
-      setTimeout(() => setShowMurloc(false), 3000);
-    }
-  }, [searchQuery]);
 
   useEffect(() => {
     document.body.className = theme !== 'default' ? `theme-${theme}` : '';
@@ -596,18 +583,6 @@ function App() {
                 <p>Interactive Map View for <strong>{showMapModal}</strong></p>
               </div>
             </motion.div>
-          </motion.div>
-        )}
-
-        {showMurloc && (
-          <motion.div
-            className="murloc-easter-egg"
-            initial={{ x: '-20vw', y: '60vh', opacity: 1 }}
-            animate={{ x: '120vw', y: '40vh', opacity: 1, rotate: 15 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 2.5, ease: 'linear' }}
-          >
-            🐸 MRGLGLGLGL!
           </motion.div>
         )}
       </AnimatePresence>
