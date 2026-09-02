@@ -365,7 +365,7 @@ function App() {
       <motion.div
         key={event.id}
         className={`event-card event-${event.category} ${isShort ? 'event-short' : ''}`}
-        style={{ top, height: isHovered && !event.isSpanningAll ? 'max-content' : height, minHeight: height, zIndex: isHovered ? 100 : 2 } as React.CSSProperties}
+        style={{ top, height: isHovered && !event.isSpanningAll ? 'auto' : height, minHeight: height, zIndex: isHovered ? 100 : 2 } as React.CSSProperties}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}

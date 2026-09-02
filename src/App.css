@@ -351,6 +351,7 @@ body.theme-warcraft {
 
 .event-card:not(.event-spanning):hover .event-title, .event-card:not(.event-spanning):focus-within .event-title {
   -webkit-line-clamp: unset;
+  display: block;
   white-space: normal;
   overflow: visible;
   flex: none;
