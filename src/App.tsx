@@ -62,6 +62,7 @@ function App() {
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [theme, setTheme] = useState<'default'|'diablo'|'overwatch'|'warcraft'>('default');
   const [showMapModal, setShowMapModal] = useState<string | null>(null);
+  const [hoveredEvent, setHoveredEvent] = useState<string | null>(null);
   
   const scheduleContainerRef = useRef<HTMLDivElement>(null);
 
@@ -358,15 +359,21 @@ function App() {
 
     const isShort = height <= 60;
 
+    const isHovered = hoveredEvent === event.id;
+
     return (
       <motion.div
         key={event.id}
         className={`event-card event-${event.category} ${isShort ? 'event-short' : ''}`}
-        style={{ top, height, '--card-height': `${height}px` } as React.CSSProperties}
+        style={{ top, height: isHovered && !event.isSpanningAll ? 'max-content' : height, minHeight: height, zIndex: isHovered ? 100 : 2 } as React.CSSProperties}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3 }}
+        onMouseEnter={() => setHoveredEvent(event.id)}
+        onMouseLeave={() => setHoveredEvent(prev => prev === event.id ? null : prev)}
+        onFocus={() => setHoveredEvent(event.id)}
+        onBlur={() => setHoveredEvent(prev => prev === event.id ? null : prev)}
       >
         <div className="event-time">
           {formatTime(event.startTime, event.day)} - {formatTime(event.endTime, event.day)}
