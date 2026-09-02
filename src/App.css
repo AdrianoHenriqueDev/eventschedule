@@ -369,27 +369,27 @@ body.theme-warcraft {
 /* Event Card Variants */
 .event-wow { background-color: rgba(247, 169, 0, 0.1); }
 .event-wow::before { background-color: var(--color-wow); }
-.event-wow:hover { background-color: rgba(247, 169, 0, 0.15); border-color: rgba(247, 169, 0, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.event-wow:hover { background-color: var(--bg-secondary); border-color: rgba(247, 169, 0, 0.5); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
 .event-overwatch { background-color: rgba(249, 158, 26, 0.1); }
 .event-overwatch::before { background-color: var(--color-overwatch); }
-.event-overwatch:hover { background-color: rgba(249, 158, 26, 0.15); border-color: rgba(249, 158, 26, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.event-overwatch:hover { background-color: var(--bg-secondary); border-color: rgba(249, 158, 26, 0.5); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
 .event-diablo { background-color: rgba(178, 15, 18, 0.1); }
 .event-diablo::before { background-color: var(--color-diablo); }
-.event-diablo:hover { background-color: rgba(178, 15, 18, 0.15); border-color: rgba(178, 15, 18, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.event-diablo:hover { background-color: var(--bg-secondary); border-color: rgba(178, 15, 18, 0.5); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
 .event-hearthstone { background-color: rgba(247, 178, 51, 0.1); }
 .event-hearthstone::before { background-color: var(--color-hearthstone); }
-.event-hearthstone:hover { background-color: rgba(247, 178, 51, 0.15); border-color: rgba(247, 178, 51, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.event-hearthstone:hover { background-color: var(--bg-secondary); border-color: rgba(247, 178, 51, 0.5); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
 .event-classic { background-color: rgba(43, 156, 237, 0.1); }
 .event-classic::before { background-color: var(--color-classic); }
-.event-classic:hover { background-color: rgba(43, 156, 237, 0.15); border-color: rgba(43, 156, 237, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.event-classic:hover { background-color: var(--bg-secondary); border-color: rgba(43, 156, 237, 0.5); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
 .event-blizzard { background-color: rgba(141, 149, 166, 0.1); }
 .event-blizzard::before { background-color: var(--color-blizzard); }
-.event-blizzard:hover { background-color: rgba(141, 149, 166, 0.15); border-color: rgba(141, 149, 166, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.event-blizzard:hover { background-color: var(--bg-secondary); border-color: rgba(141, 149, 166, 0.5); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
 /* Short Event (e.g. 15-30 mins) */
 .event-short {
