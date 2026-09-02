@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, BellOff, Info, CheckCircle2, Menu, X, CalendarDays, Search, CalendarPlus, Video } from 'lucide-react';
+import { Bell, BellOff, Info, CheckCircle2, Menu, X, CalendarDays, Search, CalendarPlus, Video, Share2 } from 'lucide-react';
 import { EVENTS, STAGES } from './data';
 import type { Category, ScheduleEvent } from './data';
 import './App.css';
@@ -60,6 +60,26 @@ function App() {
   const [isMyScheduleOnly, setIsMyScheduleOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const saved = urlParams.get('saved');
+    if (saved) {
+      const ids = saved.split(',');
+      if (ids.length > 0) {
+        if (window.confirm("Do you want to import this shared schedule?")) {
+          setNotifications(prev => {
+            const newSet = new Set(prev);
+            ids.forEach(id => newSet.add(id));
+            return newSet;
+          });
+        }
+        urlParams.delete('saved');
+        const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+        window.history.replaceState({}, '', newUrl);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -167,41 +187,37 @@ function App() {
           throw new Error('Push not supported');
         }
 
-        const permission = await Notification.requestPermission();
-        if (permission !== 'granted') {
-          addToast('removed', 'Permission Denied', 'Please enable notifications in your browser.');
-          return;
-        }
-
         const registration = await navigator.serviceWorker.ready;
         
-        // Fetch VAPID key from backend
-        const response = await fetch(`${API_URL}/vapidPublicKey`);
-        const vapidPublicKey = await response.text();
-        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-
-        // Subscribe
         let subscription = await registration.pushManager.getSubscription();
         if (!subscription) {
+          const response = await fetch(`${API_URL}/vapidPublicKey`);
+          const vapidPublicKey = await response.text();
+          
           subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
-            applicationServerKey: convertedVapidKey
+            applicationServerKey: vapidPublicKey
+          });
+          
+          await fetch(`${API_URL}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(subscription),
           });
         }
-
-        const eventDate = getPdtDate(event.startTime, event.day);
-        const triggerTimeMs = eventDate.getTime() - (5 * 60 * 1000); // 5 minutes before
-
-        // Schedule with backend
+        
+        const startDate = getPdtDate(event.startTime, event.day);
         await fetch(`${API_URL}/schedule`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            subscription,
-            title: event.title,
-            message: `Starting soon at ${formatTime(event.startTime, event.day)} on ${event.stage} stage!`,
-            triggerTimeMs
-          })
+            endpoint: subscription.endpoint,
+            event: {
+              id: event.id,
+              title: event.title,
+              time: startDate.toISOString()
+            }
+          }),
         });
 
         newNotifications.add(event.id);
@@ -355,7 +371,7 @@ function App() {
           
           <h2 className="main-title">FULL<br/>SCHEDULE</h2>
 
-          <div className="view-toggles">
+          <div className="view-toggles" style={{ marginBottom: '1rem' }}>
             <button 
               className={`view-toggle-btn ${!isMyScheduleOnly ? 'active' : ''}`}
               onClick={() => setIsMyScheduleOnly(false)}
@@ -370,6 +386,14 @@ function App() {
             </button>
           </div>
           
+          <button 
+            className="view-toggle-btn" 
+            style={{ width: '100%', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'rgba(255, 255, 255, 0.05)' }}
+            onClick={shareSchedule}
+          >
+            <Share2 size={16} /> Share Schedule
+          </button>
+
           <div className="legend">
             {LEGEND.map((item) => (
               <div 
