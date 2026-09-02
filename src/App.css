@@ -553,6 +553,12 @@
     padding: 0;
     border-right: none;
     border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bg-secondary);
+    max-height: 100vh;
+    overflow-y: auto;
   }
   
   .sidebar-content {
