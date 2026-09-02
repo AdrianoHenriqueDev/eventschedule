@@ -54,6 +54,10 @@ body.theme-warcraft {
   padding: 2rem;
   display: flex;
   flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .mobile-sidebar-header {
@@ -702,7 +706,7 @@ body.theme-warcraft {
   color: var(--text-secondary);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1024px), (max-height: 850px) {
   .app-container {
     flex-direction: column;
   }
