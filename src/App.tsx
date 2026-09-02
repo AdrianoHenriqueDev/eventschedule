@@ -199,10 +199,11 @@ function App() {
         if (!subscription) {
           const response = await fetch(`${API_URL}/vapidPublicKey`);
           const vapidPublicKey = await response.text();
+          const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
           
           subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
-            applicationServerKey: vapidPublicKey
+            applicationServerKey: convertedVapidKey
           });
           
           await fetch(`${API_URL}/register`, {
@@ -238,6 +239,33 @@ function App() {
       addToast('removed', 'Notification Cancelled', `Alert for ${event.title} has been cancelled.`);
     }
     setNotifications(newNotifications);
+  };
+
+  const shareSchedule = async () => {
+    if (notifications.size === 0) {
+      alert("You haven't added any events to your schedule yet!");
+      return;
+    }
+    const ids = Array.from(notifications).join(',');
+    const url = new URL(window.location.href);
+    url.searchParams.set('saved', ids);
+    const shareUrl = url.toString();
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My BlizzCon Schedule',
+          text: 'Check out the events I am attending!',
+          url: shareUrl,
+        });
+        return;
+      } catch (err) {
+        console.error('Error sharing', err);
+      }
+    }
+    
+    navigator.clipboard.writeText(shareUrl);
+    alert('Link copied to clipboard!');
   };
 
   const addToast = (type: 'added' | 'removed', title: string, message: string) => {
