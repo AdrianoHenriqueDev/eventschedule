@@ -346,7 +346,7 @@ body.theme-warcraft {
 }
 
 .event-card:not(.event-spanning):hover, .event-card:not(.event-spanning):focus-within {
-  height: max-content !important;
+  height: auto !important;
   min-height: var(--card-height);
   z-index: 100 !important;
   box-shadow: 0 10px 40px rgba(0,0,0,0.8);
@@ -356,6 +356,7 @@ body.theme-warcraft {
   -webkit-line-clamp: unset;
   white-space: normal;
   overflow: visible;
+  flex: none;
 }
 
 .event-card::before {
