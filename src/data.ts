@@ -81,7 +81,7 @@ const EVENTS_DAY2: Omit<ScheduleEvent, 'day'>[] = [
   { id: 'd2-main-4', title: 'WORLD OF WARCRAFT: ARCHIVES', stage: 'main', startTime: '14:15', endTime: '15:00', category: 'wow' },
   { id: 'd2-main-5', title: 'VOICES OF BLIZZARD', stage: 'main', startTime: '15:15', endTime: '17:30', category: 'blizzard' },
   { id: 'd2-main-6', title: 'CLOSING REMARKS', stage: 'main', startTime: '17:30', endTime: '17:45', category: 'blizzard' },
-  { id: 'd2-main-7', title: 'LIVE PERFORMANCE: LE SSERAFIM (IN-ROOM EXPERIENCE ONLY)', stage: 'main', startTime: '18:00', endTime: '18:45', category: 'blizzard' },
+  { id: 'd2-main-7', title: 'LIVE PERFORMANCE', stage: 'main', startTime: '18:00', endTime: '18:45', category: 'blizzard' },
 
   // Legends Stage
   { id: 'd2-leg-1', title: '30 YEARS OF BATTLE.NET WITH SPECIAL GUEST CD PROJEKT RED', stage: 'legends', startTime: '09:30', endTime: '10:30', category: 'blizzard' },
