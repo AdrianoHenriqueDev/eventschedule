@@ -239,6 +239,7 @@
   flex: 1;
   position: relative;
   min-width: max-content;
+  min-height: 1680px; /* 14 hours * 120px */
   padding-bottom: 2rem;
 }
 
