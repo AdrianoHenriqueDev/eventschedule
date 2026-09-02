@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, BellOff, Info, CheckCircle2, Menu, X } from 'lucide-react';
+import { Bell, BellOff, Info, CheckCircle2, Menu, X, CalendarDays } from 'lucide-react';
 import { EVENTS, STAGES } from './data';
 import type { Category, ScheduleEvent } from './data';
 import './App.css';
@@ -202,10 +202,12 @@ function App() {
       );
     }
 
+    const isShort = height < 60;
+
     return (
       <motion.div
         key={event.id}
-        className={`event-card event-${event.category}`}
+        className={`event-card event-${event.category} ${isShort ? 'event-short' : ''}`}
         style={{ top, height }}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -235,7 +237,7 @@ function App() {
       <aside className={`sidebar glass ${isSidebarOpen ? 'open' : ''}`}>
         <div className="mobile-sidebar-header" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
           <div className="mobile-title">
-            <span>MENU</span>
+            <CalendarDays size={20} />
           </div>
           <button className="close-sidebar-btn">
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}

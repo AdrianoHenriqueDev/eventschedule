@@ -260,6 +260,33 @@
 .event-blizzard::before { background-color: var(--color-blizzard); }
 .event-blizzard:hover { background-color: rgba(141, 149, 166, 0.15); border-color: rgba(141, 149, 166, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
+/* Short Event (e.g. 15-30 mins) */
+.event-short {
+  flex-direction: row;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  gap: 0.5rem;
+}
+
+.event-short .event-time {
+  margin-bottom: 0;
+  font-size: 0.7rem;
+}
+
+.event-short .event-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.75rem;
+  padding-right: 24px;
+}
+
+.event-short .event-actions {
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0.25rem;
+}
+
 /* Spanning Event */
 .event-spanning {
   background-color: var(--bg-secondary);
