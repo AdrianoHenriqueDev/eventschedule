@@ -57,6 +57,13 @@ function App() {
   });
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMyScheduleOnly, setIsMyScheduleOnly] = useState(false);
+  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
@@ -75,6 +82,17 @@ function App() {
     const minutesSinceStart = (eventDate.getTime() - startTimeObj.getTime()) / (1000 * 60);
     return minutesSinceStart * 2;
   };
+
+  const liveIndicatorTop = useMemo(() => {
+    const activeDate = getPdtDate('09:00', activeDay);
+    const minutesSinceStart = (currentTime.getTime() - activeDate.getTime()) / (1000 * 60);
+    
+    // Show line if within the typical 14-hour window of the event
+    if (minutesSinceStart >= 0 && minutesSinceStart <= 14 * 60) {
+      return minutesSinceStart * 2;
+    }
+    return null;
+  }, [currentTime, activeDay]);
 
   const formatTime = (time: string, day: 1 | 2): string => {
     const date = getPdtDate(time, day);
@@ -167,6 +185,8 @@ function App() {
   const renderEvent = (event: ScheduleEvent) => {
     if (event.day !== activeDay) return null;
     
+    if (isMyScheduleOnly && !notifications.has(event.id)) return null;
+
     const isVisible = !activeFilter || event.category === activeFilter;
     if (!isVisible) return null;
 
@@ -255,6 +275,21 @@ function App() {
           </div>
           
           <h2 className="main-title">FULL<br/>SCHEDULE</h2>
+
+          <div className="view-toggles">
+            <button 
+              className={`view-toggle-btn ${!isMyScheduleOnly ? 'active' : ''}`}
+              onClick={() => setIsMyScheduleOnly(false)}
+            >
+              All Events
+            </button>
+            <button 
+              className={`view-toggle-btn ${isMyScheduleOnly ? 'active' : ''}`}
+              onClick={() => setIsMyScheduleOnly(true)}
+            >
+              My Schedule
+            </button>
+          </div>
           
           <div className="legend">
             {LEGEND.map((item) => (
@@ -302,6 +337,15 @@ function App() {
             <AnimatePresence>
               {EVENTS.filter(e => e.isSpanningAll).map(renderEvent)}
             </AnimatePresence>
+
+            {liveIndicatorTop !== null && (
+              <div 
+                className="live-indicator" 
+                style={{ top: liveIndicatorTop }}
+              >
+                <div className="live-pulse"></div>
+              </div>
+            )}
 
             <div className="schedule-grid">
               {STAGES.map((stage) => (
