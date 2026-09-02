@@ -273,7 +273,7 @@ function App() {
       );
     }
 
-    const isShort = height < 60;
+    const isShort = height <= 60;
 
     return (
       <motion.div
