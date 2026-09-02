@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, BellOff, Info, CheckCircle2, Menu, X, CalendarDays, Search, CalendarPlus, Video, Share2 } from 'lucide-react';
+import { Bell, BellOff, Info, CheckCircle2, Menu, X, CalendarDays, Search, CalendarPlus, Video, Share2, Map } from 'lucide-react';
 import { EVENTS, STAGES } from './data';
 import type { Category, ScheduleEvent } from './data';
 import './App.css';
@@ -60,6 +60,12 @@ function App() {
   const [isMyScheduleOnly, setIsMyScheduleOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
+  const [theme, setTheme] = useState<'default'|'diablo'|'overwatch'|'warcraft'>('default');
+  const [showMapModal, setShowMapModal] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.body.className = theme !== 'default' ? `theme-${theme}` : '';
+  }, [theme]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -406,6 +412,13 @@ function App() {
               </div>
             ))}
           </div>
+
+          <div className="theme-selector">
+            <button onClick={() => setTheme('default')} className={`theme-btn ${theme === 'default' ? 'active' : ''}`}>BlizzCon</button>
+            <button onClick={() => setTheme('diablo')} className={`theme-btn ${theme === 'diablo' ? 'active' : ''}`}>Diablo</button>
+            <button onClick={() => setTheme('overwatch')} className={`theme-btn ${theme === 'overwatch' ? 'active' : ''}`}>Overwatch</button>
+            <button onClick={() => setTheme('warcraft')} className={`theme-btn ${theme === 'warcraft' ? 'active' : ''}`}>Warcraft</button>
+          </div>
         </div>
       </aside>
 
@@ -415,7 +428,10 @@ function App() {
           {STAGES.map((stage) => (
             <div key={stage.id} className="stage-header">
               <h2>{stage.name}</h2>
-              <span>{stage.location}</span>
+              <span onClick={() => setShowMapModal(stage.location)} className="location-link">
+                <Map size={14} style={{ display: 'inline', marginRight: '4px' }} />
+                {stage.location}
+              </span>
             </div>
           ))}
         </div>
@@ -482,6 +498,33 @@ function App() {
           ))}
         </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {showMapModal && (
+          <motion.div 
+            className="map-modal-overlay" 
+            onClick={() => setShowMapModal(null)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div 
+              className="map-modal-content" 
+              onClick={e => e.stopPropagation()}
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+            >
+              <button className="close-map" onClick={() => setShowMapModal(null)}><X size={24} /></button>
+              <h2 style={{ marginTop: 0 }}>Map: {showMapModal}</h2>
+              <div className="map-placeholder">
+                <Map size={64} style={{ opacity: 0.5 }} />
+                <p>Interactive Map View for <strong>{showMapModal}</strong></p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

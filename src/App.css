@@ -1,16 +1,44 @@
-.app-container {
-  display: flex;
-  min-height: 100vh;
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-color: #3b82f6;
+  --border-color: #334155;
 }
 
-.sidebar {
-  width: 320px;
-  min-width: 320px;
-  background-color: var(--bg-secondary);
-  border-right: 1px solid var(--border-color);
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.theme-diablo {
+  --bg-primary: #170707;
+  --bg-secondary: #260e0e;
+  --text-primary: #ffdfdf;
+  --accent-color: #d11313;
+  --border-color: #4a1d1d;
+}
+
+body.theme-overwatch {
+  --bg-primary: #20252c;
+  --bg-secondary: #2f3640;
+  --text-primary: #f8fafc;
+  --accent-color: #f99e1a;
+  --border-color: #485262;
+}
+
+body.theme-warcraft {
+  --bg-primary: #0a1324;
+  --bg-secondary: #14233c;
+  --text-primary: #f1ede3;
+  --accent-color: #e5b328;
+  --border-color: #273f69;
 }
 
 .mobile-sidebar-header {
@@ -444,6 +472,123 @@
 }
 .event-actions.active {
   opacity: 1;
+}
+
+.action-btn.glass {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.theme-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.theme-btn {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 45%;
+}
+
+.theme-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.theme-btn.active {
+  background: var(--accent-color);
+  color: #fff;
+  border-color: var(--accent-color);
+}
+
+.location-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--accent-color);
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.location-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.map-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.map-modal-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.close-map {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.close-map:hover {
+  color: #fff;
+}
+
+.map-placeholder {
+  margin-top: 2rem;
+  padding: 3rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px dashed var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.map-placeholder p {
+  color: var(--text-secondary);
+  margin: 0;
 }
 
 .action-btn {
