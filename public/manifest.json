@@ -1,0 +1,15 @@
+{
+  "short_name": "BlizzSchedule",
+  "name": "BlizzCon Interactive Schedule",
+  "icons": [
+    {
+      "src": "vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#040814",
+  "background_color": "#040814"
+}

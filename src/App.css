@@ -1,0 +1,471 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 320px;
+  min-width: 320px;
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-sidebar-header {
+  display: none;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-header {
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.day-tab {
+  cursor: pointer;
+  opacity: 0.3;
+  transition: all 0.2s ease;
+  padding-left: 1rem;
+  border-left: 3px solid transparent;
+}
+
+.day-tab:hover {
+  opacity: 0.7;
+}
+
+.day-tab.active {
+  opacity: 1;
+  border-left-color: var(--color-classic);
+}
+
+.date-header h1 {
+  font-size: 3rem;
+  line-height: 1;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-header span {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: normal;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.main-title {
+  font-size: 4rem;
+  line-height: 0.85;
+  margin-bottom: 4rem;
+  color: #fff;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.legend-item:hover {
+  color: #fff;
+}
+
+.legend-item.inactive {
+  opacity: 0.25;
+}
+
+.legend-item.inactive:hover {
+  opacity: 0.6;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+/* Colors mapped from categories */
+.color-wow { background-color: var(--color-wow); }
+.color-overwatch { background-color: var(--color-overwatch); }
+.color-diablo { background-color: var(--color-diablo); }
+.color-hearthstone { background-color: var(--color-hearthstone); }
+.color-classic { background-color: var(--color-classic); }
+.color-blizzard { background-color: var(--color-blizzard); }
+
+.schedule-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  position: relative;
+  background-color: var(--bg-primary);
+}
+
+.schedule-header {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--bg-secondary);
+  min-width: max-content;
+}
+
+.time-column {
+  width: 80px;
+  min-width: 80px;
+  border-right: 1px solid var(--border-color);
+}
+
+.stage-header {
+  flex: 0 0 260px;
+  width: 260px;
+  max-width: 260px;
+  padding: 1.5rem 1rem;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.stage-header h2 {
+  font-size: 1.5rem;
+  line-height: 1.1;
+  margin-bottom: 0.25rem;
+}
+
+.stage-header span {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+.schedule-grid-container {
+  display: flex;
+  flex: 1;
+  position: relative;
+  min-width: max-content;
+  padding-bottom: 2rem;
+}
+
+.schedule-grid {
+  display: flex;
+  flex: 1;
+  min-width: max-content;
+}
+
+.time-labels {
+  width: 80px;
+  min-width: 80px;
+  border-right: 1px solid var(--border-color);
+  position: relative;
+}
+
+.time-label {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transform: translateY(-50%);
+}
+
+.stage-column {
+  flex: 0 0 260px;
+  width: 260px;
+  max-width: 260px;
+  border-right: 1px solid var(--border-color);
+  position: relative;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 119px,
+    rgba(255,255,255,0.03) 120px
+  );
+  background-size: 100% 120px;
+}
+
+.event-card {
+  position: absolute;
+  width: calc(100% - 16px);
+  left: 8px;
+  border-radius: 6px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.event-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+
+/* Event Card Variants */
+.event-wow { background-color: rgba(247, 169, 0, 0.1); }
+.event-wow::before { background-color: var(--color-wow); }
+.event-wow:hover { background-color: rgba(247, 169, 0, 0.15); border-color: rgba(247, 169, 0, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+.event-overwatch { background-color: rgba(249, 158, 26, 0.1); }
+.event-overwatch::before { background-color: var(--color-overwatch); }
+.event-overwatch:hover { background-color: rgba(249, 158, 26, 0.15); border-color: rgba(249, 158, 26, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+.event-diablo { background-color: rgba(178, 15, 18, 0.1); }
+.event-diablo::before { background-color: var(--color-diablo); }
+.event-diablo:hover { background-color: rgba(178, 15, 18, 0.15); border-color: rgba(178, 15, 18, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+.event-hearthstone { background-color: rgba(247, 178, 51, 0.1); }
+.event-hearthstone::before { background-color: var(--color-hearthstone); }
+.event-hearthstone:hover { background-color: rgba(247, 178, 51, 0.15); border-color: rgba(247, 178, 51, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+.event-classic { background-color: rgba(43, 156, 237, 0.1); }
+.event-classic::before { background-color: var(--color-classic); }
+.event-classic:hover { background-color: rgba(43, 156, 237, 0.15); border-color: rgba(43, 156, 237, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+.event-blizzard { background-color: rgba(141, 149, 166, 0.1); }
+.event-blizzard::before { background-color: var(--color-blizzard); }
+.event-blizzard:hover { background-color: rgba(141, 149, 166, 0.15); border-color: rgba(141, 149, 166, 0.3); transform: scale(1.02); z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+/* Spanning Event */
+.event-spanning {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 4px;
+}
+.event-spanning::before { display: none; }
+.event-spanning:hover {
+  background-color: var(--bg-tertiary);
+}
+.event-spanning h3 { font-size: 1.5rem; letter-spacing: 0.1em; color: var(--text-primary); margin-top: 0.25rem; }
+.event-spanning .event-time { color: var(--text-secondary); margin-bottom: 0; }
+
+.event-time {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.event-wow .event-time { color: var(--color-wow); }
+.event-overwatch .event-time { color: var(--color-overwatch); }
+.event-diablo .event-time { color: var(--color-diablo); }
+.event-hearthstone .event-time { color: var(--color-hearthstone); }
+.event-classic .event-time { color: var(--color-classic); }
+.event-blizzard .event-time { color: var(--color-blizzard); }
+
+.event-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #fff;
+  flex: 1;
+}
+
+.event-actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.event-card:hover .event-actions {
+  opacity: 1;
+}
+.event-actions.active {
+  opacity: 1;
+}
+
+.action-btn {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.action-btn.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.action-btn.active.wow-btn { color: var(--color-wow); }
+.action-btn.active.overwatch-btn { color: var(--color-overwatch); }
+.action-btn.active.diablo-btn { color: var(--color-diablo); }
+.action-btn.active.hearthstone-btn { color: var(--color-hearthstone); }
+.action-btn.active.classic-btn { color: var(--color-classic); }
+.action-btn.active.blizzard-btn { color: var(--color-blizzard); }
+
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 100;
+}
+
+.toast {
+  background-color: var(--bg-secondary);
+  border-left: 4px solid var(--color-blizzard);
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #fff;
+  min-width: 300px;
+  border-right: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.toast.toast-added {
+  border-left-color: #2ecc71;
+}
+
+.toast.toast-removed {
+  border-left-color: #e74c3c;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.toast-message {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 1024px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    padding: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .sidebar-content {
+    display: none;
+    padding: 1.5rem;
+    padding-top: 0;
+  }
+  
+  .sidebar.open .sidebar-content {
+    display: flex;
+  }
+  
+  .mobile-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.03);
+  }
+  
+  .mobile-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #fff;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .close-sidebar-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  .legend {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .date-header {
+    margin-bottom: 2rem;
+  }
+  
+  .date-header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .main-title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+}
