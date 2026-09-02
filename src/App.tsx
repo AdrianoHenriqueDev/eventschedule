@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, BellOff, Info, CheckCircle2, Menu, X, CalendarDays, Search, CalendarPlus, Video, Share2, Map } from 'lucide-react';
 import { EVENTS, STAGES } from './data';
@@ -62,6 +62,21 @@ function App() {
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [theme, setTheme] = useState<'default'|'diablo'|'overwatch'|'warcraft'>('default');
   const [showMapModal, setShowMapModal] = useState<string | null>(null);
+  const [showMurloc, setShowMurloc] = useState(false);
+  
+  const scheduleContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (searchQuery.toLowerCase() === 'murloc') {
+      setShowMurloc(true);
+      setSearchQuery('');
+      try {
+        const audio = new Audio('https://wow.zamimg.com/wowsounds/554904');
+        audio.play().catch(e => console.log('Audio blocked', e));
+      } catch (e) {}
+      setTimeout(() => setShowMurloc(false), 3000);
+    }
+  }, [searchQuery]);
 
   useEffect(() => {
     document.body.className = theme !== 'default' ? `theme-${theme}` : '';
@@ -120,6 +135,21 @@ function App() {
     }
     return null;
   }, [currentTime, activeDay]);
+
+  const scrollToLive = () => {
+    if (liveIndicatorTop !== null && scheduleContainerRef.current) {
+      scheduleContainerRef.current.scrollTo({
+        top: liveIndicatorTop - (window.innerHeight / 2) + 150,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (liveIndicatorTop !== null) {
+      setTimeout(scrollToLive, 500); // Auto-scroll on mount if live
+    }
+  }, [activeDay]);
 
   const formatTime = (time: string, day: 1 | 2): string => {
     const date = getPdtDate(time, day);
@@ -188,6 +218,22 @@ function App() {
     const isAdded = !newNotifications.has(event.id);
     
     if (isAdded) {
+      const conflictingEvents = Array.from(notifications)
+        .map(id => EVENTS.find(e => e.id === id))
+        .filter(e => e && e.day === event.day && e.id !== event.id)
+        .filter(e => {
+          if (!e) return false;
+          const s1 = getPdtDate(e.startTime, e.day).getTime();
+          const e1 = getPdtDate(e.endTime, e.day).getTime();
+          const s2 = getPdtDate(event.startTime, event.day).getTime();
+          const e2 = getPdtDate(event.endTime, event.day).getTime();
+          return (s1 < e2 && s2 < e1);
+        });
+
+      if (conflictingEvents.length > 0) {
+        addToast('removed', 'Time Conflict!', `Warning: Overlaps with ${conflictingEvents[0]?.title}`);
+      }
+
       try {
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
           throw new Error('Push not supported');
@@ -450,7 +496,7 @@ function App() {
         </div>
       </aside>
 
-      <main className="schedule-container">
+      <main className="schedule-container" ref={scheduleContainerRef}>
         <div className="schedule-header">
           <div className="time-column"></div>
           {STAGES.map((stage) => (
@@ -552,7 +598,25 @@ function App() {
             </motion.div>
           </motion.div>
         )}
+
+        {showMurloc && (
+          <motion.div
+            className="murloc-easter-egg"
+            initial={{ x: '-20vw', y: '60vh', opacity: 1 }}
+            animate={{ x: '120vw', y: '40vh', opacity: 1, rotate: 15 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 2.5, ease: 'linear' }}
+          >
+            🐸 MRGLGLGLGL!
+          </motion.div>
+        )}
       </AnimatePresence>
+
+      {liveIndicatorTop !== null && (
+        <button className="fab-live glass" onClick={scrollToLive}>
+          Ir para Agora
+        </button>
+      )}
     </div>
   );
 }
