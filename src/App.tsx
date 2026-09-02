@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, BellOff, Info, CheckCircle2, Menu, X, CalendarDays } from 'lucide-react';
+import { Bell, BellOff, Info, CheckCircle2, Menu, X, CalendarDays, Search, CalendarPlus, Video } from 'lucide-react';
 import { EVENTS, STAGES } from './data';
 import type { Category, ScheduleEvent } from './data';
 import './App.css';
@@ -58,6 +58,7 @@ function App() {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMyScheduleOnly, setIsMyScheduleOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
 
   useEffect(() => {
@@ -105,6 +106,55 @@ function App() {
       return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(/\s+/g, '');
     });
   }, [startTimeObj]);
+
+  const getTwitchUrl = (category: Category) => {
+    switch (category) {
+      case 'wow': return 'https://twitch.tv/warcraft';
+      case 'overwatch': return 'https://twitch.tv/playoverwatch';
+      case 'diablo': return 'https://twitch.tv/diablo';
+      case 'hearthstone': return 'https://twitch.tv/playhearthstone';
+      case 'classic':
+      case 'blizzard':
+      case 'opening':
+      default:
+        return 'https://twitch.tv/blizzard';
+    }
+  };
+
+  const generateICS = (event: ScheduleEvent) => {
+    const startDate = getPdtDate(event.startTime, event.day);
+    const endDate = getPdtDate(event.endTime, event.day);
+    
+    const formatICSDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//BlizzCon Schedule//EN',
+      'BEGIN:VEVENT',
+      `UID:${event.id}@blizzcon`,
+      `DTSTAMP:${formatICSDate(new Date())}`,
+      `DTSTART:${formatICSDate(startDate)}`,
+      `DTEND:${formatICSDate(endDate)}`,
+      `SUMMARY:${event.title}`,
+      `LOCATION:${STAGES.find(s => s.id === event.stage)?.name || 'BlizzCon'}`,
+      `URL:${getTwitchUrl(event.category)}`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${event.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   const toggleNotification = async (e: React.MouseEvent, event: ScheduleEvent) => {
     e.stopPropagation();
@@ -186,6 +236,7 @@ function App() {
     if (event.day !== activeDay) return null;
     
     if (isMyScheduleOnly && !notifications.has(event.id)) return null;
+    if (searchQuery && !event.title.toLowerCase().includes(searchQuery.toLowerCase())) return null;
 
     const isVisible = !activeFilter || event.category === activeFilter;
     if (!isVisible) return null;
@@ -240,6 +291,23 @@ function App() {
         <div className="event-title">{event.title}</div>
         
         <div className={`event-actions ${isNotified ? 'active' : ''}`}>
+          <a
+            href={getTwitchUrl(event.category)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="action-btn twitch-btn"
+            title="Watch on Twitch"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Video size={14} />
+          </a>
+          <button 
+            className="action-btn calendar-btn"
+            onClick={(e) => { e.stopPropagation(); generateICS(event); }}
+            title="Add to Calendar"
+          >
+            <CalendarPlus size={14} />
+          </button>
           <button 
             className={`action-btn ${isNotified ? `active ${event.category}-btn` : ''}`}
             onClick={(e) => toggleNotification(e, event)}
@@ -265,6 +333,17 @@ function App() {
         </div>
 
         <div className="sidebar-content">
+          <div className="search-container">
+            <Search size={16} className="search-icon" />
+            <input 
+              type="text" 
+              placeholder="Search events..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+          </div>
+
           <div className="date-header">
             <div className={`day-tab ${activeDay === 1 ? 'active' : ''}`} onClick={() => setActiveDay(1)}>
               <h1>9/12 <span>DAY ONE</span></h1>
