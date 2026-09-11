@@ -11,7 +11,7 @@ const getPdtDate = (time: string, day: 1 | 2): Date => {
   return new Date(`${dateStr}T${time}:00-07:00`);
 };
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'https://eventschedule-cs63.onrender.com';
 
 // Base64 helper for VAPID keys
 function urlBase64ToUint8Array(base64String: string) {
