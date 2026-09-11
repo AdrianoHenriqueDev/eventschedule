@@ -97,7 +97,7 @@ function App() {
 
   useEffect(() => {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
-      navigator.serviceWorker.register('/sw.js').catch(console.error);
+      navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(console.error);
     }
   }, []);
 
